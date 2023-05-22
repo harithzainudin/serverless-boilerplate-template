@@ -1,0 +1,21 @@
+meta-auth-login:
+  handler: src/handlers/hello-serverless/handler.handler
+  description: Hello from serverless!
+  timeout: 10
+  memorySize: 128
+  reservedConcurrency: 1
+  # Uncomment this if you want the lambda to be invoke by API gateway
+  # events:
+  #   - http:
+  #       method: get
+  #       path: /hello-serverless
+  #       cors:
+  #         origins: "*"
+  #         headers:
+  #           - Content-Type
+  #           - X-Amz-Date
+  #           - Authorization
+  #           - X-Api-Key
+  #           - X-Amz-Security-Token
+  #           - X-Amz-User-Agent
+  #         allowCredentials: false
