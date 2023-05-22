@@ -1,0 +1,24 @@
+{
+  "name": "clients-and-utilities",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harithzainudin/serverless-boilerplate-template.git"
+  },
+  "author": "Harith Zainudin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harithzainudin/serverless-boilerplate-template/issues"
+  },
+  "homepage": "https://github.com/harithzainudin/serverless-boilerplate-template#readme",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.335.0",
+    "@aws-sdk/lib-dynamodb": "^3.335.0",
+    "ramda": "^0.29.0"
+  }
+}
