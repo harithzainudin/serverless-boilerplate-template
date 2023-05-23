@@ -220,10 +220,10 @@ async function deleteItem(
  * It takes a ScanCommandInput object, sends it to DynamoDB, and returns the response
  * @link https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html
  * @param {ScanCommandInput} input - ScanCommandInput
- * @returns A promise that resolves to a ScanCommandOutput
+ * @returns {ScanCommandOutput}
  */
 async function scanTable(input: ScanCommandInput): Promise<ScanCommandOutput> {
-  const res = ddbDocClient.send(new ScanCommand(input));
+  const res = await ddbDocClient.send(new ScanCommand(input));
   const log = {
     message: "Complete getItems",
     input: input,
