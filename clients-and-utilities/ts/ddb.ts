@@ -11,7 +11,6 @@
  * while the DynamoDB client provides more fine-grained control over the DynamoDB API.
  *
  * Hence we are using DynamoDB Document Client to interact with our database.
- * @copyright eCloudvalley Technology Sdn. Bhd.
  * @requires @aws-sdk/client-dynamodb, @aws-sdk/lib-dynamodb,
  *          logger (custom logger from @aws-lambda-powertools/logger), ramda
  */
