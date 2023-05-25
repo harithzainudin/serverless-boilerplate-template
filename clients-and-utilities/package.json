@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/harithzainudin/serverless-boilerplate-template#readme",
   "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.8.0",
     "@aws-sdk/client-dynamodb": "^3.335.0",
     "@aws-sdk/lib-dynamodb": "^3.335.0",
     "ramda": "^0.29.0",
