@@ -22,7 +22,7 @@ provider:
 functions:
   - ${file(./resources/functions.yml)}
 
-# Put here if you have other resources to create
+# Uncomment code below and put your other resources here if you have any
 # resources:
 #   - ${file(./resources/{file-to-your-other-resources}.yml)}
 
