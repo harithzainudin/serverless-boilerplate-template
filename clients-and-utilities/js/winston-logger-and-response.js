@@ -1,3 +1,14 @@
+/**
+ * To use this logger, you will need to make sure to call initializeContext() function.
+ * This is to make sure that the requestId is being set globally.
+ * If not, when you are returning the response to your client using okResponse() or errResponse()
+ * the requestId will be null value.
+ * If you want to provide your own requestId, then you do not need to call initializeContext()
+ * and amend the function as per your use case.
+ * We are using requestId from lambda context for debugging purpose.
+ * It is recommended to use initializeContext() so that it is easy for you to search back the requestId in cloudwatch.
+ */
+
 const winston = require("winston");
 require("util").inspect.defaultOptions.depth = null;
 
@@ -19,7 +30,7 @@ function okResponse(message, data = {}) {
       "Access-Control-Allow-Credentials": true,
     },
     body: JSON.stringify({
-      requestId: requestId,
+      request_id: requestId,
       status_code: 200,
       message: message,
       data: data,
@@ -42,7 +53,7 @@ function errResponse(statusCode, message, errorObject = {}) {
       ? {
           name: errorObject.name,
           message: errorObject.message,
-          stack: errorObject.stack,
+          // stack: errorObject.stack, // You can comment this out if you want to pass and expose your error stack to your client.
         }
       : errorObject;
 
@@ -55,7 +66,7 @@ function errResponse(statusCode, message, errorObject = {}) {
       "Access-Control-Allow-Credentials": true,
     },
     body: JSON.stringify({
-      requestId: requestId,
+      request_id: requestId,
       status_code: statusCode,
       message: message,
       error: constructedError,
