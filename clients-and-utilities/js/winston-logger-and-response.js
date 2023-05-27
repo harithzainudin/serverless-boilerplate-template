@@ -5,6 +5,7 @@
  * the requestId will be null value.
  * If you want to provide your own requestId, then you do not need to call initializeContext()
  * and amend the function as per your use case.
+ * Or, you can also use `responses.js` where you can provide your own requestId when returning the response
  * We are using requestId from lambda context for debugging purpose.
  * It is recommended to use initializeContext() so that it is easy for you to search back the requestId in cloudwatch.
  */
