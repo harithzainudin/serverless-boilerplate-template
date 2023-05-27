@@ -14,7 +14,7 @@ These are the list of default plugins added into this template because of how us
 
 You can install extra plugins if you wish additional plugins for your serverless project. These are the list of plugins that I think the most useful for a serverless project.
 
-1. [serverless-deployment-bucket](https://www.serverless.com/plugins/serverless-deployment-bucket) - This plugin will create your custom deployment bucket if it doesn't exist, and optionally configure the deployment bucket to apply server-side encryption. If you have already craeted your own deployment bucket beforehand, then probably you do not need this plugin.
+1. [serverless-deployment-bucket](https://www.serverless.com/plugins/serverless-deployment-bucket) - This plugin will create your custom deployment bucket if it doesn't exist, and optionally configure the deployment bucket to apply server-side encryption. If you have already created your own deployment bucket beforehand, then probably you do not need this plugin.
     - To use this plugin, inside your `serverless.yml`, under `provider` tag, add in as below
     ```
     provider:
