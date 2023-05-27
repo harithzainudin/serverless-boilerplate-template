@@ -14,7 +14,7 @@ hello-serverless-second:
   events:
     - http:
         method: get
-        path: /hello-serverless-second
+        path: /hello/serverless/second
         cors:
           origins: "*"
           headers:
