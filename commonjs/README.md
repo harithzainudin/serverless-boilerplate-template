@@ -12,14 +12,22 @@ These are the list of default plugins added into this template because of how us
 
 ### Extra plugins
 
-You can install extra plugins if you wish additional plugins for your serverless project. These are the list of plugins that I think the most useful for a serverless project.
+You can install extra plugins if you wish additional plugins for your serverless project. These are the list of plugins that I think will be useful for a serverless project.
 
 1. [serverless-deployment-bucket](https://www.serverless.com/plugins/serverless-deployment-bucket) - This plugin will create your custom deployment bucket if it doesn't exist, and optionally configure the deployment bucket to apply server-side encryption. If you have already created your own deployment bucket beforehand, then probably you do not need this plugin.
-    - To use this plugin, inside your `serverless.yml`, under `provider` tag, add in as below
-    ```
-    provider:
-        deploymentBucket:
-            name: <put-your-own-bucket-name>
-    ```
+   - run `npm i serverless-deployment-bucket` or `serverless plugin install -n serverless deployment bucket`
+   - If you run the second command in the first step, then you do not need to follow this second step, just proceed to third step. Add `serverless-deployment-bucket` under `plugins`
+     ```
+     plugins:
+       - serverless-deployment-bucket
+     ```
+   - To use this plugin, inside your `serverless.yml`, under `provider` tag, add in as below
+     ```
+     provider:
+       deploymentBucket:
+         name: <put-your-own-bucket-name>
+     ```
+2. [serverless-webpack](https://www.serverless.com/plugins/serverless-webpack) - A Serverless Framework plugin to build your lambda functions with Webpack. This plugin is for you if you want to use the latest Javascript version with Babel; use custom resource loaders, optimize your packaged functions individually and much more!
+   - run `npm i serverless-webpack`
 
 [Go here](https://www.serverless.com/plugins) for more serverless plugin.
