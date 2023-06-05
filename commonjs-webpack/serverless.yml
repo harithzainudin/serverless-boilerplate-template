@@ -1,0 +1,55 @@
+service: common-template
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  architecture: arm64
+  logRetentionInDays: ${self:custom.logRetentionInDays.${sls:stage}, 7}
+  stage: dev
+  environment:
+    LOG_LEVEL: ${self:custom.logLevel.${sls:stage}, "info"}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action: "dynamodb:*"
+          Resource: "*"
+
+functions:
+  - ${file(./resources/functions.yml)}
+
+# Uncomment code below and put your other resources here if you have any
+# resources:
+#   - ${file(./resources/{file-to-your-other-resources}.yml)}
+
+plugins:
+  - serverless-plugin-common-excludes
+  - serverless-plugin-include-dependencies
+  - serverless-prune-plugin
+  - serverless-webpack
+
+# Disabling the built-in Serverless option for excluding development dependencies
+# for serverless-plugin-include-dependencies plugins config
+package:
+  excludeDevDependencies: false
+  individually: true
+
+custom:
+  includeDependencies:
+    enableCaching: true
+  logRetentionInDays:
+    dev: 60
+    staging: 90
+    prod: 120
+  logLevel:
+    dev: "debug"
+    staging: "debug"
+    prod: "info"
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
