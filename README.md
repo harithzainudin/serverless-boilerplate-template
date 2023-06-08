@@ -21,7 +21,8 @@ Feel free to make a pull request to improve the clients or utilities!
 
 ## Included templates
 
--
+- CommonJS
+- CommonJS + Webpack
 
 ## Contributions:
 
