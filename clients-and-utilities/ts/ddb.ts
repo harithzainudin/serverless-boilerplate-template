@@ -12,7 +12,7 @@
  *
  * Hence we are using DynamoDB Document Client to interact with our database.
  * @requires @aws-sdk/client-dynamodb, @aws-sdk/lib-dynamodb,
- *          logger (custom logger from @aws-lambda-powertools/logger), ramda
+ *          logger (any logger you want), ramda
  */
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
@@ -62,17 +62,33 @@ const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
  * @param {PutCommandInput} input - PutCommandInput
  * @returns PutCommandOutput
  */
-async function putItem(input: PutCommandInput): Promise<PutCommandOutput> {
-  const res = await ddbDocClient.send(new PutCommand(input));
+async function putItem(
+  input: PutCommandInput,
+  actionFor?: string
+): Promise<PutCommandOutput> {
+  try {
+    const res = await ddbDocClient.send(new PutCommand(input));
 
-  const log = {
-    message: "Complete putItem",
-    input: input,
-    command_response: res,
-  };
+    const log = {
+      message: "Complete putItem",
+      input: input,
+      command_response: res,
+    };
 
-  console.log(JSON.stringify(log, null, 2));
-  return res;
+    console.log(JSON.stringify(log, null, 2));
+    return res;
+  } catch (e: unknown) {
+    const log = {
+      message: "Fail to putItem",
+      input,
+      actionFor,
+      error: e,
+    };
+
+    console.log(JSON.stringify(log, null, 2));
+
+    throw e;
+  }
 }
 
 /**
