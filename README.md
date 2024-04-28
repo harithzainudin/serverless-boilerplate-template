@@ -1,10 +1,17 @@
 # Serverless Boilerplate Template
 
-This repository is a collection of serverless boilerplate templates designed to expedite the process of starting new projects. It serves as a convenient resource for developers who frequently work on serverless architectures. At first, when I start using serverless, there's quite a things that need to configure, hence this boilerplate template comes in. 
+This repository is a collection of serverless boilerplate templates designed to expedite the process of starting new projects. It serves as a convenient resource for developers who frequently work on serverless architectures. At first, when I start using serverless, there's quite a things that need to configure, hence this boilerplate template comes in.
 
-You might have different ways to structurized and naming the folder and that is totally fine and okay :). 
+You might have different ways to structurized and naming the folder and that is totally fine and okay :).
 
 But this is the structure that I think the most easy for me to start a project.
+
+## Table of Content
+
+- [Instructions](#instructions)
+- [Included Templates](#included-templates)
+- [Extensions Used in VS Code](#extensions-used-in-vs-code)
+- [Contributions](#contributions)
 
 ## Instructions
 
@@ -23,6 +30,14 @@ Feel free to make a pull request to improve the clients or utilities!
 
 - CommonJS
 - CommonJS + Webpack
+
+## Extensions Used in VS Code
+
+- [CloudFormation Snippets](https://marketplace.visualstudio.com/items?itemName=dannysteenman.cloudformation-yaml-snippets)
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [IAM Legend](https://marketplace.visualstudio.com/items?itemName=SebastianBille.iam-legend)
+- [YAML](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)
 
 ## Contributions:
 
