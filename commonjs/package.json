@@ -17,11 +17,11 @@
   },
   "homepage": "https://github.com/harithzainudin/serverless-boilerplate-template#readme",
   "dependencies": {
-    "serverless": "^3.31.0"
+    "serverless": "^3.38.0"
   },
   "devDependencies": {
     "serverless-plugin-common-excludes": "^4.0.0",
-    "serverless-plugin-include-dependencies": "^5.1.0",
+    "serverless-plugin-include-dependencies": "^6.0.0",
     "serverless-prune-plugin": "^2.0.2"
   }
 }
