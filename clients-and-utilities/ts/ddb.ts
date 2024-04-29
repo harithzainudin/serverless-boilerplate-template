@@ -82,7 +82,7 @@ async function putItem(
       message: "Fail to putItem",
       input,
       actionFor,
-      error: e,
+      error: convertErrorObject(e as Error).logger,
     };
 
     console.log(JSON.stringify(log, null, 2));
@@ -101,15 +101,30 @@ async function putItem(
  * @param {GetCommandInput} input - GetCommandInput
  * @returns The response from the DynamoDB GetItem command.
  */
-async function getItem(input: GetCommandInput): Promise<GetCommandOutput> {
-  const res = await ddbDocClient.send(new GetCommand(input));
-  const log = {
-    message: "Complete getItem",
-    input: input,
-    command_response: res,
-  };
-  console.log(JSON.stringify(log, null, 2));
-  return res;
+async function getItem(
+  input: GetCommandInput,
+  actionFor: string
+): Promise<GetCommandOutput> {
+  try {
+    const res = await ddbDocClient.send(new GetCommand(input));
+    const log = {
+      message: "Complete getItem",
+      input: input,
+      command_response: res,
+    };
+    console.log(JSON.stringify(log, null, 2));
+    return res;
+  } catch (e) {
+    const log = {
+      message: "Fail to getItem",
+      input,
+      actionFor,
+      error: convertErrorObject(e as Error).logger,
+    };
+
+    console.log(JSON.stringify(log, null, 2));
+    throw e;
+  }
 }
 
 /**
@@ -327,6 +342,47 @@ async function batchExecuteStmt(
   };
   console.log(JSON.stringify(log, null, 2));
   return res;
+}
+
+export type CustomError = {
+  name: string;
+  stack: string;
+  message: string;
+};
+
+export type ConvertErrorObject = {
+  response: Omit<CustomError, "stack"> | object;
+  logger: CustomError | object;
+};
+
+function convertErrorObject(
+  errorObject: Error | object | CustomError
+): ConvertErrorObject {
+  let loggerError: CustomError | object;
+  let responseError: Omit<CustomError, "stack"> | object;
+  // Using duck typing to check for the errorObject
+  if (
+    errorObject &&
+    (errorObject as Error | CustomError).name &&
+    (errorObject as Error | CustomError).stack &&
+    (errorObject as Error | CustomError).message
+  ) {
+    loggerError = {
+      name: (errorObject as Error | CustomError).name,
+      message: (errorObject as Error | CustomError).message,
+      stack: (errorObject as Error | CustomError).stack || "No stack provided",
+    };
+
+    responseError = {
+      name: (errorObject as Error | CustomError).name,
+      message: (errorObject as Error | CustomError).message,
+    };
+  } else {
+    loggerError = errorObject;
+    responseError = errorObject;
+  }
+
+  return { logger: loggerError, response: responseError };
 }
 
 export {
