@@ -64,7 +64,7 @@ const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
  */
 async function putItem(
   input: PutCommandInput,
-  actionFor?: string
+  actionFor?: string,
 ): Promise<PutCommandOutput> {
   try {
     const res = await ddbDocClient.send(new PutCommand(input));
@@ -103,7 +103,7 @@ async function putItem(
  */
 async function getItem(
   input: GetCommandInput,
-  actionFor: string
+  actionFor: string,
 ): Promise<GetCommandOutput> {
   try {
     const res = await ddbDocClient.send(new GetCommand(input));
@@ -141,17 +141,30 @@ async function getItem(
  * * @returns The response from the DynamoDB DocumentClient.
  */
 async function updateItem(
-  input: UpdateCommandInput
+  input: UpdateCommandInput,
+  actionFor: string,
 ): Promise<UpdateCommandOutput> {
-  const res = await ddbDocClient.send(new UpdateCommand(input));
-  const log = {
-    message: "Complete updateItem",
-    input: input,
-    command_response: res,
-  };
-  console.log(JSON.stringify(log, null, 2));
+  try {
+    const res = await ddbDocClient.send(new UpdateCommand(input));
+    const log = {
+      message: "Complete updateItem",
+      input: input,
+      command_response: res,
+    };
+    console.log(JSON.stringify(log, null, 2));
 
-  return res;
+    return res;
+  } catch (e) {
+    const log = {
+      message: "Fail to updateItem",
+      input,
+      actionFor,
+      error: convertErrorObject(e as Error).logger,
+    };
+
+    console.log(JSON.stringify(log, null, 2));
+    throw e;
+  }
 }
 
 /**
@@ -174,43 +187,55 @@ async function updateItem(
 async function batchWriteItem(
   tableName: string,
   action: "put" | "delete",
-  items: { [key: string]: unknown }[]
+  items: { [key: string]: unknown }[],
 ): Promise<void> {
-  const processedItems: { [key: string]: unknown }[] = [];
+  try {
+    const processedItems: { [key: string]: unknown }[] = [];
 
-  if (action === "put") {
-    items.forEach((item) => {
-      processedItems.push({
-        PutRequest: { Item: item },
+    if (action === "put") {
+      items.forEach((item) => {
+        processedItems.push({
+          PutRequest: { Item: item },
+        });
       });
-    });
-  } else {
-    items.forEach((item) => {
-      processedItems.push({
-        DeleteRequest: { Key: item },
+    } else {
+      items.forEach((item) => {
+        processedItems.push({
+          DeleteRequest: { Key: item },
+        });
       });
+    }
+
+    const processedItemBatches = splitEvery(25, processedItems);
+    const batchCount = processedItemBatches.length;
+
+    const batchRequests = processedItemBatches.map(async (batch, i) => {
+      const command = new BatchWriteCommand({
+        RequestItems: { [tableName]: batch },
+      });
+
+      const res = await ddbDocClient.send(command);
+      const log = {
+        message: "Complete batchWrite",
+        batch_number: i + "out of " + batchCount,
+        command_response: res,
+        input: batch,
+      };
+      console.log(JSON.stringify(log, null, 2));
     });
-  }
 
-  const processedItemBatches = splitEvery(25, processedItems);
-  const batchCount = processedItemBatches.length;
-
-  const batchRequests = processedItemBatches.map(async (batch, i) => {
-    const command = new BatchWriteCommand({
-      RequestItems: { [tableName]: batch },
-    });
-
-    const res = await ddbDocClient.send(command);
+    await Promise.all(batchRequests);
+  } catch (e) {
     const log = {
-      message: "Complete batchWrite",
-      batch_number: i + "out of " + batchCount,
-      command_response: res,
-      input: batch,
+      message: "Fail to batchWriteItem",
+      action,
+      items,
+      error: convertErrorObject(e as Error).logger,
     };
-    console.log(JSON.stringify(log, null, 2));
-  });
 
-  await Promise.all(batchRequests);
+    console.log(JSON.stringify(log, null, 2));
+    throw e;
+  }
 }
 
 /**
@@ -228,7 +253,7 @@ async function batchWriteItem(
  * @returns The response from the DynamoDB DocumentClient.
  */
 async function deleteItem(
-  input: DeleteCommandInput
+  input: DeleteCommandInput,
 ): Promise<DeleteCommandOutput> {
   const res = await ddbDocClient.send(new DeleteCommand(input));
   const log = {
@@ -282,7 +307,7 @@ async function scanTable(input: ScanCommandInput): Promise<ScanCommandOutput> {
  * @returns The response from the queryItems function is the response from the DynamoDB query.
  */
 async function queryItems(
-  input: QueryCommandInput
+  input: QueryCommandInput,
 ): Promise<QueryCommandOutput> {
   const res = await ddbDocClient.send(new QueryCommand(input));
   const log = {
@@ -304,7 +329,7 @@ async function queryItems(
  * @returns The response from the DynamoDB DocumentClient.
  */
 async function executeStmt(
-  input: ExecuteStatementCommandInput
+  input: ExecuteStatementCommandInput,
 ): Promise<ExecuteStatementCommandOutput> {
   const res = await ddbDocClient.send(new ExecuteStatementCommand(input));
   const log = {
@@ -332,7 +357,7 @@ async function executeStmt(
  * @returns The response from the batchExecuteStmt command.
  */
 async function batchExecuteStmt(
-  input: BatchExecuteStatementCommandInput
+  input: BatchExecuteStatementCommandInput,
 ): Promise<BatchExecuteStatementCommandOutput> {
   const res = await ddbDocClient.send(new BatchExecuteStatementCommand(input));
   const log = {
@@ -356,7 +381,7 @@ export type ConvertErrorObject = {
 };
 
 function convertErrorObject(
-  errorObject: Error | object | CustomError
+  errorObject: Error | object | CustomError,
 ): ConvertErrorObject {
   let loggerError: CustomError | object;
   let responseError: Omit<CustomError, "stack"> | object;
