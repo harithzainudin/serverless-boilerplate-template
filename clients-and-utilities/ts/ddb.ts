@@ -254,15 +254,28 @@ async function batchWriteItem(
  */
 async function deleteItem(
   input: DeleteCommandInput,
+  actionFor: string,
 ): Promise<DeleteCommandOutput> {
-  const res = await ddbDocClient.send(new DeleteCommand(input));
-  const log = {
-    message: "Complete deleteItem",
-    command_response: res,
-    input: input,
-  };
-  console.log(JSON.stringify(log, null, 2));
-  return res;
+  try {
+    const res = await ddbDocClient.send(new DeleteCommand(input));
+    const log = {
+      message: "Complete deleteItem",
+      command_response: res,
+      input: input,
+    };
+    console.log(JSON.stringify(log, null, 2));
+    return res;
+  } catch (e) {
+    const log = {
+      message: "Fail to deleteItem",
+      actionFor,
+      input,
+      error: convertErrorObject(e as Error).logger,
+    };
+
+    console.log(JSON.stringify(log, null, 2));
+    throw e;
+  }
 }
 
 /**
@@ -278,15 +291,30 @@ async function deleteItem(
  * @param {ScanCommandInput} input - ScanCommandInput
  * @returns {ScanCommandOutput}
  */
-async function scanTable(input: ScanCommandInput): Promise<ScanCommandOutput> {
-  const res = await ddbDocClient.send(new ScanCommand(input));
-  const log = {
-    message: "Complete getItems",
-    input: input,
-    command_response: res,
-  };
-  console.log(JSON.stringify(log, null, 2));
-  return res;
+async function scanTable(
+  input: ScanCommandInput,
+  actionFor: string,
+): Promise<ScanCommandOutput> {
+  try {
+    const res = await ddbDocClient.send(new ScanCommand(input));
+    const log = {
+      message: "Complete getItems",
+      input: input,
+      command_response: res,
+    };
+    console.log(JSON.stringify(log, null, 2));
+    return res;
+  } catch (e) {
+    const log = {
+      message: "Fail to scanTable",
+      actionFor,
+      input,
+      error: convertErrorObject(e as Error).logger,
+    };
+
+    console.log(JSON.stringify(log, null, 2));
+    throw e;
+  }
 }
 
 /**
